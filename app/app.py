@@ -247,8 +247,8 @@ def main():
     </div>
     """, unsafe_allow_html=True)
     
-    # Model path selection
-    model_path = Path(__file__).parent.parent / "model" / "skin_cancer_model_final.keras"
+    # Model path selection - Using optimized model
+    model_path = Path(__file__).parent.parent / "model" / "skin_cancer_model_optimized_final.keras"
     labels_path = Path(__file__).parent.parent / "model" / "class_names.txt"
     
     # Check if files exist
@@ -317,7 +317,7 @@ def main():
             # Make prediction with modern loading
             with st.spinner("⚡ Analyzing image with AI..."):
                 prediction = model.predict(np.expand_dims(img_normalized, axis=0), verbose=0)[0][0]
-                result = format_prediction(prediction, class_names, 0.05)
+                result = format_prediction(prediction, class_names, 0.5)
             
             # Display results in full width
             st.markdown("---")
@@ -367,41 +367,31 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
             
-            # Probability breakdown - Modern flat design
+            # Probability breakdown - Clean flat design
             st.markdown("""
-            <div style='margin: 2rem 0 1rem 0;'>
-                <h4 style='color: #2c3e50; font-weight: 600; font-size: 1.1rem;'>
-                    <svg style='width: 24px; height: 24px; vertical-align: middle; margin-right: 8px;' viewBox='0 0 24 24' fill='#3498db' xmlns='http://www.w3.org/2000/svg'>
-                        <path d='M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M9 17H7V10H9V17M13 17H11V7H13V17M17 17H15V13H17V17Z'/>
-                    </svg>
-                    Probability Distribution
-                </h4>
+            <div style='margin: 2.5rem 0 1.2rem 0;'>
+                <h3 style='color: #2c3e50; font-weight: 700; font-size: 1.3rem; margin: 0;'>Probability Distribution</h3>
             </div>
             """, unsafe_allow_html=True)
             
-            # Display probabilities in modern cards
+            # Display probabilities in clean flat cards
             for class_name, prob in result['all_probabilities'].items():
                 # Color based on class
                 if class_name.lower() == 'benign':
                     color = '#27ae60'
-                    icon_path = 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'
+                    bg_color = '#e8f8f0'
                 else:
                     color = '#e74c3c'
-                    icon_path = 'M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z'
+                    bg_color = '#fdeaea'
                 
                 st.markdown(f"""
-                <div style='background: white; border-left: 4px solid {color}; border-radius: 8px; padding: 1rem; margin-bottom: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.08);'>
-                    <div style='display: flex; justify-content: space-between; align-items: center;'>
-                        <div style='display: flex; align-items: center;'>
-                            <svg style='width: 20px; height: 20px; margin-right: 0.5rem;' viewBox='0 0 24 24' fill='{color}' xmlns='http://www.w3.org/2000/svg'>
-                                <path d='{icon_path}'/>
-                            </svg>
-                            <span style='font-weight: 600; color: #2c3e50; font-size: 1rem;'>{class_name.capitalize()}</span>
-                        </div>
-                        <span style='font-weight: 700; color: {color}; font-size: 1.2rem;'>{prob:.2f}%</span>
+                <div style='background: {bg_color}; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;'>
+                    <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;'>
+                        <span style='font-weight: 700; color: #2c3e50; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.5px;'>{class_name}</span>
+                        <span style='font-weight: 800; color: {color}; font-size: 1.8rem;'>{prob:.1f}%</span>
                     </div>
-                    <div style='background: #ecf0f1; border-radius: 10px; height: 8px; margin-top: 0.8rem; overflow: hidden;'>
-                        <div style='background: {color}; height: 100%; width: {prob}%; border-radius: 10px; transition: width 0.3s ease;'></div>
+                    <div style='background: white; border-radius: 20px; height: 12px; overflow: hidden;'>
+                        <div style='background: {color}; height: 100%; width: {prob}%; border-radius: 20px; transition: width 0.4s ease;'></div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -432,23 +422,14 @@ def main():
         if team_photo_b64:
             # Use local image
             st.markdown(f"""
-            <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 2rem; text-align: center; color: white; min-height: 350px; display: flex; flex-direction: column; justify-content: center; align-items: center; background-image: url("data:image/jpeg;base64,{team_photo_b64}"); background-size: cover; background-position: center; position: relative;'>
-                <div style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(102, 126, 234, 0.75) 0%, rgba(118, 75, 162, 0.75) 100%); border-radius: 12px;'></div>
-                <div style='position: relative; z-index: 1;'>
-                    <h3 style='margin: 0; font-size: 2rem; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);'>Medical Team</h3>
-                    <p style='margin: 0.5rem 0 0 0; font-size: 1.1rem; opacity: 0.95; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);'>Powered by AI & Medical Expertise</p>
-                </div>
+            <div style='background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); border-radius: 12px; padding: 2rem; text-align: center; color: white; min-height: 350px; display: flex; flex-direction: column; justify-content: center; align-items: center; background-image: url("data:image/jpeg;base64,{team_photo_b64}"); background-size: cover; background-position: center; position: relative;'>
+                <div style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(52, 152, 219, 0.6) 0%, rgba(41, 128, 185, 0.6) 100%); border-radius: 12px;'></div>
             </div>
             """, unsafe_allow_html=True)
         else:
             # Fallback placeholder
             st.markdown("""
-            <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 2rem; text-align: center; color: white; min-height: 350px; display: flex; flex-direction: column; justify-content: center; align-items: center;'>
-                <svg style='width: 80px; height: 80px; margin-bottom: 1rem;' viewBox='0 0 24 24' fill='white' xmlns='http://www.w3.org/2000/svg'>
-                    <path d='M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M19 19H5V5H19V19M13.96 12.29L11.21 15.83L9.25 13.47L6.5 17H17.5L13.96 12.29Z'/>
-                </svg>
-                <h3 style='margin: 0; font-size: 1.8rem; font-weight: 700;'></h3>
-                <p style='margin: 0.5rem 0 0 0; font-size: 1rem; opacity: 0.95;'>Add team_photo.jpg to assets folder</p>
+            <div style='background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); border-radius: 12px; padding: 2rem; text-align: center; color: white; min-height: 350px; display: flex; flex-direction: column; justify-content: center; align-items: center;'>
             </div>
             """, unsafe_allow_html=True)
         

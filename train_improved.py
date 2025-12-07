@@ -40,7 +40,7 @@ CONFIG = {
     'learning_rate_phase1': 0.001,
     'learning_rate_phase2': 0.0001,
     'seed': 42,
-    'model_save_path': 'model/skin_cancer_model_improved.keras'
+    'model_save_path': 'model/skin_cancer_model_optimized_checkpoint.keras'
 }
 
 # Set random seeds
@@ -324,8 +324,8 @@ print(f"   Precision: {test_results[2]*100:.2f}%")
 print(f"   Recall: {test_results[3]*100:.2f}%")
 print(f"   AUC: {test_results[4]:.4f}")
 
-# Save final model
-final_model_path = 'model/skin_cancer_model_final.keras'
+# Save final model as optimized
+final_model_path = 'model/skin_cancer_model_optimized_final.keras'
 model.save(final_model_path)
 print(f"\n💾 Model saved to: {final_model_path}")
 

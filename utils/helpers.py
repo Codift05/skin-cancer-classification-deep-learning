@@ -25,26 +25,31 @@ def load_class_names(labels_file):
     return class_names
 
 
-def format_prediction(prediction_prob, class_names, threshold=0.05):
+def format_prediction(prediction_prob, class_names, threshold=0.5):
     """
     Format prediction output for display
     
     Args:
         prediction_prob (float): Prediction probability (0-1)
         class_names (list): List of class names
-        threshold (float): Classification threshold (default 0.05 for optimal balance)
+        threshold (float): Classification threshold (default 0.5 for standard binary classification)
     
     Returns:
         dict: Formatted prediction result
     """
+    # Determine class based on highest probability
     predicted_class_idx = int(prediction_prob > threshold)
     predicted_class = class_names[predicted_class_idx]
     
-    # Calculate confidence
-    if predicted_class_idx == 1:  # Positive class
-        confidence = prediction_prob * 100
-    else:  # Negative class
-        confidence = (1 - prediction_prob) * 100
+    # Get probabilities for both classes
+    prob_benign = (1 - prediction_prob) * 100
+    prob_malignant = prediction_prob * 100
+    
+    # Confidence is the probability of the predicted class
+    if predicted_class_idx == 1:  # Malignant
+        confidence = prob_malignant
+    else:  # Benign
+        confidence = prob_benign
     
     return {
         'class': predicted_class,
@@ -52,8 +57,8 @@ def format_prediction(prediction_prob, class_names, threshold=0.05):
         'confidence': confidence,
         'probability': prediction_prob,
         'all_probabilities': {
-            class_names[0]: (1 - prediction_prob) * 100,
-            class_names[1]: prediction_prob * 100
+            class_names[0]: prob_benign,
+            class_names[1]: prob_malignant
         }
     }
 

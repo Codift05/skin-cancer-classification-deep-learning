@@ -152,13 +152,13 @@ except Exception as e:
 print("\n[10/10] Saving model...")
 try:
     os.makedirs('model', exist_ok=True)
-    model.save('model/skin_cancer_model.h5')
+    model.save('model/skin_cancer_model_optimized_final.keras')
     
     class_names = ['benign', 'malignant']
     with open('model/class_names.txt', 'w') as f:
         f.write('\n'.join(class_names))
     
-    print("[OK] Model saved: model/skin_cancer_model.h5")
+    print("[OK] Model saved: model/skin_cancer_model_optimized_final.keras")
     print("[OK] Classes saved: model/class_names.txt")
 except Exception as e:
     print(f"[FAIL] Saving: {e}")

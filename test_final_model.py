@@ -1,8 +1,8 @@
 import numpy as np
 import tensorflow as tf
 
-# Load the FINAL model (the one we trained)
-model = tf.keras.models.load_model("model/skin_cancer_model_final.keras")
+# Load the OPTIMIZED model (the latest trained model)
+model = tf.keras.models.load_model("model/skin_cancer_model_optimized_final.keras")
 
 # Load test data  
 test_dir = "data/test"
@@ -47,7 +47,7 @@ all_labels_flat = all_labels.flatten()
 thresholds = [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50]
 
 print("\n" + "="*70)
-print("FINAL MODEL THRESHOLD EVALUATION")
+print("OPTIMIZED MODEL THRESHOLD EVALUATION")
 print("="*70)
 
 for t in thresholds:

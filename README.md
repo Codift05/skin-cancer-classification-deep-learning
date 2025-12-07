@@ -1,10 +1,11 @@
 # Skin Cancer Classification using Deep Learning
 
-A comprehensive machine learning system for binary classification of skin lesions (Benign vs Malignant) using transfer learning with MobileNetV2 architecture and Grad-CAM visualization for model interpretability.
+A comprehensive machine learning system for binary classification of skin lesions (Benign vs Malignant) using optimized transfer learning with MobileNetV2 architecture. The system achieves **90.9% validation accuracy** with enhanced data augmentation and fine-tuning strategy.
 
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.20-FF6F00?logo=tensorflow)](https://tensorflow.org)
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python)](https://python.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.0+-FF4B4B?logo=streamlit)](https://streamlit.io)
+[![Accuracy](https://img.shields.io/badge/Accuracy-90.9%25-brightgreen)](https://github.com)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ---
@@ -52,18 +53,22 @@ The implementation utilizes MobileNetV2 as the base model, pre-trained on ImageN
 
 ### Deep Learning Architecture
 
-- Transfer learning with MobileNetV2 (ImageNet pre-trained weights)
-- Custom classification head with dropout regularization (0.5, 0.3)
-- Data augmentation pipeline for improved generalization
-- Binary crossentropy loss with Adam optimizer (lr=0.001)
-- Early stopping and learning rate reduction callbacks
+- **Optimized Transfer Learning** with MobileNetV2 (ImageNet pre-trained weights)
+- **Fine-tuned Architecture**: 54 unfrozen layers from MobileNetV2
+- **Enhanced Regularization**: Dropout (0.5, 0.5, 0.3) + L2 regularization
+- **Aggressive Data Augmentation**: Rotation (±40°), Shift (±30%), Zoom (±30%), Flip, Brightness
+- **Class Balancing**: Weighted loss for imbalanced dataset
+- **Adaptive Learning**: ReduceLROnPlateau + Early stopping (patience=10)
+- **Optimizers**: Adam with initial lr=0.001, reduced to 0.0005 during training
 
-### Model Interpretability
+### Model Performance
 
-- Grad-CAM (Gradient-weighted Class Activation Mapping) visualization
-- Heatmap overlay showing decision-relevant regions
-- Confidence score distribution analysis
-- Visual explanation of model predictions
+- **Training Accuracy**: 89.7%
+- **Validation Accuracy**: 90.9%
+- **Validation Precision**: 91.0%
+- **Validation Recall**: 91.0%
+- **Model Size**: 28.96 MB
+- **Parameters**: 2,625,089 (2,225,473 trainable)
 
 ### Web Application
 
@@ -163,14 +168,16 @@ Output (1 unit, Sigmoid)
 
 | Component | Details |
 |-----------|---------|
-| Total Parameters | 2,430,273 |
-| Trainable Parameters | 172,289 |
-| Non-trainable Parameters | 2,257,984 |
-| Optimizer | Adam (lr=0.001) |
-| Loss Function | Binary Crossentropy |
-| Metrics | Accuracy, Precision, Recall, AUC |
+| Model Version | Optimized (December 2025) |
+| Total Parameters | 2,625,089 |
+| Trainable Parameters | 2,225,473 |
+| Non-trainable Parameters | 399,616 |
+| Optimizer | Adam (lr=0.001 → 0.0005) |
+| Loss Function | Binary Crossentropy (with class weights) |
+| Metrics | Accuracy, Precision, Recall, AUC, TP, FP, TN, FN |
 | Batch Size | 32 |
-| Max Epochs | 25 |
+| Max Epochs | 50 (with early stopping) |
+| Fine-tuned Layers | 54 layers from MobileNetV2 |
 
 ### Training Strategy
 

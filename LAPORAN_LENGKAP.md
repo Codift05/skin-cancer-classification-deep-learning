@@ -54,7 +54,7 @@ Proyek ini mengembangkan sistem klasifikasi kanker kulit berbasis Convolutional 
 Sistem Machine Learning yang dapat:
 - Memberikan prediksi awal secara cepat dan akurat
 - Membantu screening awal sebelum konsultasi dengan dokter
-- Memberikan visualisasi area yang dicurigai menggunakan Grad-CAM
+- Memberikan hasil klasifikasi dengan confidence score yang jelas
 - Dapat diakses melalui web browser dari mana saja
 
 ---
@@ -68,8 +68,8 @@ Mengembangkan sistem klasifikasi otomatis untuk mendeteksi kanker kulit dari gam
 1. Membangun model CNN dengan akurasi minimal 80%
 2. Mengimplementasikan transfer learning menggunakan MobileNetV2
 3. Menerapkan data augmentation untuk meningkatkan generalisasi model
-4. Mengembangkan aplikasi web interaktif untuk deployment
-5. Mengimplementasikan Grad-CAM untuk interpretability model
+4. Mengembangkan aplikasi web interaktif dengan desain modern untuk deployment
+5. Mengoptimalkan model untuk mencapai performa maksimal dengan fine-tuning
 
 ---
 
@@ -105,14 +105,6 @@ MobileNetV2 adalah arsitektur CNN yang efisien, dirancang untuk perangkat mobile
 
 **[GAMBAR 2: Arsitektur MobileNetV2]**
 > Masukkan diagram arsitektur MobileNetV2 dengan inverted residual blocks
-
-### 4.4 Grad-CAM (Gradient-weighted Class Activation Mapping)
-
-Grad-CAM adalah teknik visualisasi yang menunjukkan area mana dalam gambar yang paling mempengaruhi keputusan model. Ini penting untuk:
-
-- **Interpretability:** Memahami keputusan model
-- **Trust:** Memvalidasi bahwa model fokus pada area yang benar
-- **Debugging:** Mengidentifikasi bias atau kesalahan model
 
 ---
 
@@ -171,7 +163,6 @@ Grad-CAM adalah teknik visualisasi yang menunjukkan area mana dalam gambar yang 
 | Data Processing | NumPy | Latest | Operasi array |
 | Visualization | Matplotlib | Latest | Plotting |
 | Metrics | Scikit-learn | Latest | Evaluasi model |
-| Visualization | OpenCV | 4.8.0+ | Grad-CAM overlay |
 
 ### 5.3 Spesifikasi Hardware
 
@@ -589,12 +580,8 @@ Actual Benign    288        12
 - Menampilkan hasil klasifikasi (Benign/Malignant)
 - Confidence score dalam bentuk persentase
 - Color-coded results (hijau untuk benign, merah untuk malignant)
-
-#### 11.2.3 Grad-CAM Visualization
-- Heatmap yang menunjukkan area penting
-- Overlay heatmap pada gambar asli
-- Adjustable heatmap intensity
-- Interpretasi visual keputusan model
+- Probability distribution untuk kedua kelas
+- Desain modern flat dengan visual yang jelas
 
 **[GAMBAR 21: Screenshot Aplikasi - Home Page]**
 > Masukkan screenshot halaman utama aplikasi
@@ -603,12 +590,9 @@ Actual Benign    288        12
 > Masukkan screenshot saat user mengupload gambar
 
 **[GAMBAR 23: Screenshot Aplikasi - Prediction Result]**
-> Masukkan screenshot hasil prediksi dengan confidence score
+> Masukkan screenshot hasil prediksi dengan confidence score dan probability distribution
 
-**[GAMBAR 24: Screenshot Aplikasi - Grad-CAM Visualization]**
-> Masukkan screenshot Grad-CAM heatmap dan overlay
-
-#### 11.2.4 Settings Panel
+#### 11.2.4 Medical Team Section
 - Threshold adjustment (0.3 - 0.7)
 - Heatmap alpha adjustment
 - Model information
@@ -621,17 +605,23 @@ Actual Benign    288        12
 
 **Layout:**
 ```
-┌─────────────────────────────────────────┐
-│           HEADER & TITLE                │
-├─────────┬───────────────────────────────┤
-│ SIDEBAR │      MAIN CONTENT             │
-│         │                               │
-│ - Logo  │  1. Upload Section            │
-│ - Menu  │  2. Image Preview             │
-│ - Config│  3. Prediction Results        │
-│ - About │  4. Grad-CAM Visualization    │
-│         │  5. Interpretation            │
-└─────────┴───────────────────────────────┘
+┌──────────────────────────────────────┐
+│        HEADER & TITLE                │
+│     (Centered Layout)                │
+├──────────────────────────────────────┤
+│         MAIN CONTENT                 │
+│                                      │
+│  1. Upload Section (Centered)        │
+│  2. Image Preview                    │
+│  3. Prediction Results               │
+│     - Result Card                    │
+│     - Confidence Score               │
+│  4. Probability Distribution         │
+│     - Benign Probability             │
+│     - Malignant Probability          │
+│  5. Medical Team Section             │
+│     (dengan gradient background)     │
+└──────────────────────────────────────┘
 ```
 
 ### 11.4 Cara Menjalankan Aplikasi
@@ -666,17 +656,12 @@ Model melakukan prediksi
          ▼
 Tampilkan hasil klasifikasi
          │
-         ▼
-Generate Grad-CAM heatmap
+         ├─> Result Card (Benign/Malignant)
+         ├─> Confidence Score
+         └─> Probability Distribution
          │
          ▼
-User melihat area yang dicurigai
-         │
-         ▼
-User dapat adjust threshold/settings
-         │
-         ▼
-User dapat download hasil
+User dapat upload gambar lain
 ```
 
 **[GAMBAR 26: User Flow Diagram]**
@@ -690,13 +675,12 @@ app/
 │   ├── load_model()    # Load trained model
 │   ├── preprocess()    # Image preprocessing
 │   ├── predict()       # Make prediction
-│   ├── gradcam()       # Generate Grad-CAM
+│   ├── get_team_photo_base64() # Team photo encoding
 │   └── main()          # Streamlit UI
 │
 utils/
 ├── preprocess.py       # Preprocessing utilities
-├── gradcam.py          # Grad-CAM implementation
-└── helpers.py          # Helper functions
+└── helpers.py          # Helper functions (format_prediction)
 ```
 
 ---
@@ -734,8 +718,8 @@ utils/
 ✅ **Balanced Performance:** Training (89.7%) dan validation (90.9%) hampir sama - no overfitting  
 ✅ **High Recall:** 89.8% recall - mendeteksi 9 dari 10 malignant cases  
 ✅ **Fast Inference:** Prediksi cepat (< 1 detik per gambar)  
-✅ **Interpretable:** Grad-CAM menunjukkan area yang dianalisis  
-✅ **User-Friendly:** Interface modern flat design, mudah digunakan  
+✅ **Modern UI:** Interface flat design yang clean, user-friendly, dan professional  
+✅ **Clear Results:** Probability distribution yang mudah dipahami dengan color-coding  
 ✅ **Scalable:** Dapat di-deploy ke cloud (Heroku, AWS, GCP)  
 ✅ **Clinical Ready:** Performa mendekati standar klinis untuk screening tools  
 
@@ -749,10 +733,11 @@ utils/
 
 ### 12.4 Kontribusi Penelitian
 
-1. **Implementasi Transfer Learning:** Berhasil menerapkan MobileNetV2 untuk domain medis
-2. **Interpretability:** Menggunakan Grad-CAM untuk transparansi keputusan model
-3. **Deployment-Ready:** Aplikasi web yang siap digunakan untuk demo/pilot project
-4. **Dokumentasi Lengkap:** Template untuk proyek ML serupa
+1. **Implementasi Transfer Learning:** Berhasil menerapkan MobileNetV2 dengan fine-tuning untuk domain medis
+2. **Model Optimization:** Teknik optimisasi komprehensif (class weights, aggressive augmentation, regularization)
+3. **Modern UI/UX:** Desain flat modern yang user-friendly untuk aplikasi medis
+4. **Deployment-Ready:** Aplikasi web yang siap digunakan untuk demo/pilot project
+5. **Dokumentasi Lengkap:** Template untuk proyek ML serupa
 
 ---
 
@@ -908,45 +893,43 @@ utils/
 
 [3] Tschandl, P., Rosendahl, C., & Kittler, H. (2018). The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions. *Scientific Data*, 5, 180161.
 
-[4] Selvaraju, R. R., Cogswell, M., Das, A., Vedantam, R., Parikh, D., & Batra, D. (2017). Grad-CAM: Visual explanations from deep networks via gradient-based localization. *Proceedings of the IEEE International Conference on Computer Vision*, 618-626.
-
-[5] Howard, A. G., Zhu, M., Chen, B., Kalenichenko, D., Wang, W., Weyand, T., ... & Adam, H. (2017). MobileNets: Efficient convolutional neural networks for mobile vision applications. *arXiv preprint arXiv:1704.04861*.
+[4] Howard, A. G., Zhu, M., Chen, B., Kalenichenko, D., Wang, W., Weyand, T., ... & Adam, H. (2017). MobileNets: Efficient convolutional neural networks for mobile vision applications. *arXiv preprint arXiv:1704.04861*.
 
 [6] Sandler, M., Howard, A., Zhu, M., Zhmoginov, A., & Chen, L. C. (2018). MobileNetV2: Inverted residuals and linear bottlenecks. *Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition*, 4510-4520.
 
 ### Dataset
 
-[7] International Skin Imaging Collaboration (ISIC). ISIC Archive. https://www.isic-archive.com
+[6] International Skin Imaging Collaboration (ISIC). ISIC Archive. https://www.isic-archive.com
 
-[8] Tschandl, P., Rosendahl, C., & Kittler, H. (2018). HAM10000 Dataset. Harvard Dataverse. https://doi.org/10.7910/DVN/DBW86T
+[7] Tschandl, P., Rosendahl, C., & Kittler, H. (2018). HAM10000 Dataset. Harvard Dataverse. https://doi.org/10.7910/DVN/DBW86T
 
 ### Framework dan Library
 
-[9] Abadi, M., Barham, P., Chen, J., Chen, Z., Davis, A., Dean, J., ... & Zheng, X. (2016). TensorFlow: A system for large-scale machine learning. *12th USENIX Symposium on Operating Systems Design and Implementation*, 265-283.
+[8] Abadi, M., Barham, P., Chen, J., Chen, Z., Davis, A., Dean, J., ... & Zheng, X. (2016). TensorFlow: A system for large-scale machine learning. *12th USENIX Symposium on Operating Systems Design and Implementation*, 265-283.
 
-[10] Chollet, F., & others. (2015). Keras. https://keras.io
+[9] Chollet, F., & others. (2015). Keras. https://keras.io
 
-[11] Streamlit Inc. (2021). Streamlit: The fastest way to build data apps. https://streamlit.io
+[10] Streamlit Inc. (2021). Streamlit: The fastest way to build data apps. https://streamlit.io
 
 ### Medical Guidelines
 
-[12] American Academy of Dermatology. (2021). Skin Cancer. https://www.aad.org/public/diseases/skin-cancer
+[11] American Academy of Dermatology. (2021). Skin Cancer. https://www.aad.org/public/diseases/skin-cancer
 
-[13] World Health Organization. (2020). Skin Cancers. https://www.who.int/news-room/q-a-detail/skin-cancers
+[12] World Health Organization. (2020). Skin Cancers. https://www.who.int/news-room/q-a-detail/skin-cancers
 
-[14] American Cancer Society. (2021). Melanoma Skin Cancer. https://www.cancer.org/cancer/melanoma-skin-cancer.html
+[13] American Cancer Society. (2021). Melanoma Skin Cancer. https://www.cancer.org/cancer/melanoma-skin-cancer.html
 
 ### Transfer Learning
 
-[15] Pan, S. J., & Yang, Q. (2010). A survey on transfer learning. *IEEE Transactions on Knowledge and Data Engineering*, 22(10), 1345-1359.
+[14] Pan, S. J., & Yang, Q. (2010). A survey on transfer learning. *IEEE Transactions on Knowledge and Data Engineering*, 22(10), 1345-1359.
 
-[16] Yosinski, J., Clune, J., Bengio, Y., & Lipson, H. (2014). How transferable are features in deep neural networks?. *Advances in Neural Information Processing Systems*, 27, 3320-3328.
+[15] Yosinski, J., Clune, J., Bengio, Y., & Lipson, H. (2014). How transferable are features in deep neural networks?. *Advances in Neural Information Processing Systems*, 27, 3320-3328.
 
 ### Deep Learning in Medicine
 
-[17] Topol, E. J. (2019). High-performance medicine: the convergence of human and artificial intelligence. *Nature Medicine*, 25(1), 44-56.
+[16] Topol, E. J. (2019). High-performance medicine: the convergence of human and artificial intelligence. *Nature Medicine*, 25(1), 44-56.
 
-[18] Rajpurkar, P., Chen, E., Banerjee, O., & Topol, E. J. (2022). AI in health and medicine. *Nature Medicine*, 28(1), 31-38.
+[17] Rajpurkar, P., Chen, E., Banerjee, O., & Topol, E. J. (2022). AI in health and medicine. *Nature Medicine*, 28(1), 31-38.
 
 ---
 
@@ -1111,34 +1094,10 @@ def preprocess_image(image):
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
-# Grad-CAM function
-def generate_gradcam(model, img_array, layer_name='Conv_1'):
-    grad_model = tf.keras.models.Model(
-        inputs=[model.inputs],
-        outputs=[model.get_layer(layer_name).output, model.output]
-    )
-    
-    with tf.GradientTape() as tape:
-        conv_outputs, predictions = grad_model(img_array)
-        loss = predictions[:, 0]
-    
-    grads = tape.gradient(loss, conv_outputs)
-    pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
-    
-    conv_outputs = conv_outputs[0]
-    heatmap = conv_outputs @ pooled_grads[..., tf.newaxis]
-    heatmap = tf.squeeze(heatmap)
-    heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
-    
-    return heatmap.numpy()
-
 # Main app
+st.set_page_config(page_title="Skin Cancer Classification", layout="centered")
 st.title("🔬 Skin Cancer Classification")
 st.write("Upload a dermatoscopic image for analysis")
-
-# Sidebar
-st.sidebar.header("Settings")
-threshold = st.sidebar.slider("Classification Threshold", 0.3, 0.7, 0.5)
 
 # File uploader
 uploaded_file = st.file_uploader("Choose an image...", type=['jpg', 'jpeg', 'png'])
@@ -1158,36 +1117,33 @@ if uploaded_file is not None:
     # Display results
     st.subheader("Prediction Results")
     
-    if prediction > threshold:
-        st.error(f"⚠️ **MALIGNANT** - Confidence: {prediction*100:.2f}%")
-        st.write("Recommendation: Consult a dermatologist immediately")
-    else:
-        st.success(f"✅ **BENIGN** - Confidence: {(1-prediction)*100:.2f}%")
-        st.write("Recommendation: Regular monitoring recommended")
+    # Get formatted prediction
+    from utils.helpers import format_prediction
+    result = format_prediction(prediction, threshold=0.5)
     
-    # Grad-CAM
-    if st.checkbox("Show Grad-CAM Visualization"):
-        with st.spinner('Generating heatmap...'):
-            heatmap = generate_gradcam(model, img_array)
-            
-            # Resize heatmap
-            heatmap_resized = cv2.resize(heatmap, (image.width, image.height))
-            heatmap_colored = cv2.applyColorMap(
-                np.uint8(255 * heatmap_resized), 
-                cv2.COLORMAP_JET
-            )
-            
-            # Overlay
-            img_bgr = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-            overlay = cv2.addWeighted(img_bgr, 0.6, heatmap_colored, 0.4, 0)
-            overlay_rgb = cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB)
-            
-            # Display
-            col1, col2 = st.columns(2)
-            with col1:
-                st.image(heatmap_colored, caption='Heatmap', use_column_width=True)
-            with col2:
-                st.image(overlay_rgb, caption='Overlay', use_column_width=True)
+    # Display result card
+    if result['class'] == 'Malignant':
+        st.error(f"⚠️ **{result['class'].upper()}** - Confidence: {result['confidence']:.1f}%")
+        st.write("⚕️ Recommendation: Consult a dermatologist immediately")
+    else:
+        st.success(f"✅ **{result['class'].upper()}** - Confidence: {result['confidence']:.1f}%")
+        st.write("📋 Recommendation: Regular monitoring recommended")
+    
+    # Probability distribution
+    st.subheader("Probability Distribution")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.metric(
+            label="Benign Probability",
+            value=f"{result['benign_prob']:.1f}%"
+        )
+    
+    with col2:
+        st.metric(
+            label="Malignant Probability",
+            value=f"{result['malignant_prob']:.1f}%"
+        )
 ```
 
 ### Lampiran C: Requirements
@@ -1199,7 +1155,7 @@ pillow
 numpy
 matplotlib
 scikit-learn
-opencv-python>=4.8.0
+scipy
 ```
 
 ### Lampiran D: Struktur Project
@@ -1220,7 +1176,6 @@ Skin_Cancer_Classification/
 │   └── app.py
 ├── utils/
 │   ├── preprocess.py
-│   ├── gradcam.py
 │   └── helpers.py
 ├── notebook/
 │   └── training.ipynb
@@ -1287,16 +1242,15 @@ Berikut adalah daftar lengkap 27 gambar yang perlu Anda siapkan dan masukkan ke 
 - [ ] **Gambar 19:** 6 contoh prediksi benar (3 benign, 3 malignant)
 - [ ] **Gambar 20:** 4-6 contoh prediksi salah dengan confidence score
 
-### Aplikasi Web (Gambar 21-26)
+### Aplikasi Web (Gambar 21-25)
 - [ ] **Gambar 21:** Screenshot home page aplikasi
 - [ ] **Gambar 22:** Screenshot saat upload image
-- [ ] **Gambar 23:** Screenshot hasil prediksi dengan confidence
-- [ ] **Gambar 24:** Screenshot Grad-CAM heatmap dan overlay
-- [ ] **Gambar 25:** Screenshot settings panel di sidebar
-- [ ] **Gambar 26:** User flow diagram aplikasi
+- [ ] **Gambar 23:** Screenshot hasil prediksi dengan confidence dan probability distribution
+- [ ] **Gambar 24:** Screenshot medical team section dengan gradient background
+- [ ] **Gambar 25:** User flow diagram aplikasi
 
-### Penutup (Gambar 27)
-- [ ] **Gambar 27:** Logo/banner proyek
+### Penutup (Gambar 26)
+- [ ] **Gambar 26:** Logo/banner proyek
 
 ---
 
@@ -1305,4 +1259,4 @@ Berikut adalah daftar lengkap 27 gambar yang perlu Anda siapkan dan masukkan ke 
 2. Grafik training dapat di-generate dari `view_training_results.py` atau dari training log
 3. Confusion matrix dan ROC curve dapat di-generate dari `test_final_model.py`
 4. Sampel gambar dataset ambil dari folder `data/train/` dan `data/test/`
-5. Untuk Grad-CAM, jalankan aplikasi dan upload gambar test untuk capture hasil
+5. Screenshot medical team section menunjukkan gradient background biru yang modern
